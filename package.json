@@ -1,0 +1,26 @@
+{
+  "name": "compound-decorators",
+  "version": "0.0.1",
+  "description": "Model decorators for CompoundJS",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/minmb/compound-decorators.git"
+  },
+  "author": "Martin Häger",
+  "license": "BSD",
+  "bugs": {
+    "url": "https://github.com/minmb/compound-decorators/issues"
+  },
+  "dependencies": {
+    "inflection": "*",
+    "harmony-reflect": "*",
+    "lodash": "*"
+  },
+  "engines": {
+    "node": ">= v0.7.8"
+  }
+}
