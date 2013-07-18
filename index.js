@@ -20,23 +20,29 @@ module.exports = function(compound) {
 
                 global[decorator.decoratorName] = decorator;
 
-                model.prototype.decorate = function() {
+                (function(decorator, model) {
 
-                    var _this = this,
-                        d = new decorator(this);
+                    model.prototype.decorate = function() {
 
-                    return Reflect.Proxy({}, {
-                        get: function(obj, prop) {
-                            return typeof d[prop] !== 'undefined' ? d[prop] : _this[prop];
-                        }
-                    });
-                };
+                        var _this = this,
+                            d = new decorator(this);
 
-                decorator.decorateCollection = function(collection) {
-                    return _.map(collection, function(e) {
-                        return e.decorate();
-                    });
-                };
+                        return Reflect.Proxy({}, {
+                            get: function(obj, prop) {
+                                return typeof d[prop] !== 'undefined' ? d[prop] : _this[prop];
+                            }
+                        });
+                    };
+
+                    decorator.decorateCollection = function(collection) {
+
+                        return _.map(collection, function(e) {
+                            return e.decorate();
+                        });
+                    };
+                    
+                })(decorator, model);
+
             }
 
         });
