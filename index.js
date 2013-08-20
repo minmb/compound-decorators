@@ -1,7 +1,6 @@
 var fs = require('fs'),
     path = require('path'),
     inflection = require('inflection'),
-    Reflect = require('harmony-reflect'),
     _ = require('lodash');
 
 module.exports = function(compound) {
@@ -24,14 +23,18 @@ module.exports = function(compound) {
 
                     model.prototype.decorate = function() {
 
-                        var _this = this,
-                            d = new decorator(this);
+                        var d = new decorator(this),
+                            decoratedObj = {};
 
-                        return Reflect.Proxy({}, {
-                            get: function(obj, prop) {
-                                return typeof d[prop] !== 'undefined' ? d[prop] : _this[prop];
-                            }
+                        [this, d].forEach(function(obj) {
+                            var props = getAllPropertyNames(obj);
+
+                            props.forEach(function(prop) {
+                                decoratedObj[prop] = obj[prop];
+                            });
                         });
+
+                        return decoratedObj;
                     };
 
                     decorator.decorateCollection = function(collection) {
@@ -70,6 +73,20 @@ module.exports = function(compound) {
 
         });
 
+    }
+
+    function getAllPropertyNames(obj) {
+        var props = [];
+
+        do {
+            Object.getOwnPropertyNames(obj).forEach(function (prop) {
+                if (props.indexOf(prop) === -1) {
+                    props.push(prop);
+                }
+            });
+        } while (obj = Object.getPrototypeOf(obj));
+
+        return props;
     }
 
 };
